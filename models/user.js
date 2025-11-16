@@ -59,6 +59,12 @@ userSchema.methods.removeFromCart = function (productId) {
   this.cart.items = updatedCartItems;
   return this.save();
 };
+
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] };
+  return this.save();
+};
+
 //* Mongoose will automatically look for the plural, lowercased version of your model name
 // Thus, it will look for 'users' collection in the database
 // If it doesn't find one, it will create it for you
