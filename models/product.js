@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const user = require("./user");
 // Schema constructor allows us to create a new schema
 const Schema = mongoose.Schema;
 
@@ -7,6 +8,13 @@ const productSchema = new Schema({
   price: { type: Number, required: true },
   description: { type: String, required: true },
   imageUrl: { type: String, required: true },
+  userId: {
+    type: Schema.Types.ObjectId,
+    //* ref is used to establish a relationship between two models
+    // Here we are setting the realtionship between Product and User models
+    ref: "User",
+    required: true,
+  },
 });
 
 //# A model connects a schema with a name

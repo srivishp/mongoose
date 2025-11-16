@@ -21,6 +21,10 @@ exports.postAddProduct = (req, res, next) => {
     imageUrl: imageUrl,
     description: description,
     price: price,
+    // every product is associated with a user
+    //-> Mongoose allows to store the entire user object or just the user._id
+    // If we store the whole object, it will automatically extract the id and store it in the database
+    userId: req.user,
   });
   product
     .save()
@@ -81,6 +85,12 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
+    //? The below methods are mongoose specific & only FYI. They're not needed in this project.
+    //* select allows us to choose specific fields to fetch from the documents
+    // Here we are fetching only title and price, excluding _id, so (-_id )
+    // .select("title price -_id")
+    //* populate is a utility method provided by mongoose
+    // .populate("userId", "name") // populating all the user details at once, instead of manually iterating and fetching
     .then((products) => {
       res.render("admin/products", {
         prods: products,

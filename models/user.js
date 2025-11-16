@@ -1,3 +1,30 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  cart: {
+    items: [
+      {
+        productId: {
+          type: Schema.Types.ObjectId,
+          //* ref is used to establish a relationship between two models
+          // Here we are setting the realtionship between Product and User models
+          ref: "Product",
+          required: true,
+        },
+        quantity: { type: Number, required: true },
+      },
+    ],
+  },
+});
+
+// Mongoose will automatically look for the plural, lowercased version of your model name
+// Thus, it will look for 'users' collection in the database
+// If it doesn't find one, it will create it for you
+module.exports = mongoose.model("User", userSchema);
+
 // const { getOrders } = require("../controllers/shop");
 // const { get } = require("../routes/admin");
 
