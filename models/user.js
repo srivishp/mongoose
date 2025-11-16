@@ -52,7 +52,14 @@ userSchema.methods.addToCart = function (product) {
   return this.save();
 };
 
-// Mongoose will automatically look for the plural, lowercased version of your model name
+userSchema.methods.removeFromCart = function (productId) {
+  const updatedCartItems = this.cart.items.filter((item) => {
+    return item.productId.toString() !== productId.toString();
+  });
+  this.cart.items = updatedCartItems;
+  return this.save();
+};
+//* Mongoose will automatically look for the plural, lowercased version of your model name
 // Thus, it will look for 'users' collection in the database
 // If it doesn't find one, it will create it for you
 module.exports = mongoose.model("User", userSchema);

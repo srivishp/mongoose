@@ -85,7 +85,7 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
-    //? The below methods are mongoose specific & only FYI. They're not needed in this project.
+    //? The below methods are mongoose specific & only FYI. They're not needed ihere.
     //* select allows us to choose specific fields to fetch from the documents
     // Here we are fetching only title and price, excluding _id, so (-_id )
     // .select("title price -_id")
