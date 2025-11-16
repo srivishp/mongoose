@@ -20,6 +20,38 @@ const userSchema = new Schema({
   },
 });
 
+//# Mongoose specific methods to work on our schema
+//? Really convenient!
+userSchema.methods.addToCart = function (product) {
+  //checking if product already exists in cart
+  const cartProductIndex = this.cart.items.findIndex((cp) => {
+    // == can be used but using both sides toString() for safety & is also a good practice
+    return cp.productId.toString() === product._id.toString();
+  });
+  let newQuantity = 1;
+  const updatedCartItems = [...this.cart.items];
+
+  if (cartProductIndex >= 0) {
+    // product exists in cart, incrementing quantity
+    newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+    updatedCartItems[cartProductIndex].quantity = newQuantity;
+  } else {
+    updatedCartItems.push({
+      // Mongoose will automatically convert the id to ObjectId type
+      productId: product._id,
+      quantity: newQuantity,
+    });
+  }
+
+  const updatedCart = {
+    // instead of {...product, quantity}, we are only storing the productId because if the product details change in the shop, the cart won't reflect that
+    // so we will only refer to the id of product and manually fetch other details from products collection when needed
+    items: updatedCartItems,
+  };
+  this.cart = updatedCart;
+  return this.save();
+};
+
 // Mongoose will automatically look for the plural, lowercased version of your model name
 // Thus, it will look for 'users' collection in the database
 // If it doesn't find one, it will create it for you
@@ -41,41 +73,6 @@ module.exports = mongoose.model("User", userSchema);
 //   save() {
 //     const db = getDb();
 //     return db.collection("users").insertOne(this);
-//   }
-
-//   // adding the user's cart functionality
-//   addToCart(product) {
-//     // checking if product already exists in cart
-//     const cartProductIndex = this.cart.items.findIndex((cp) => {
-//       // == can be used but using both sides toString() for safety & is also a good practice
-//       return cp.productId.toString() === product._id.toString();
-//     });
-//     let newQuantity = 1;
-//     const updatedCartItems = [...this.cart.items];
-
-//     if (cartProductIndex >= 0) {
-//       // product exists in cart, incrementing quantity
-//       newQuantity = this.cart.items[cartProductIndex].quantity + 1;
-//       updatedCartItems[cartProductIndex].quantity = newQuantity;
-//     } else {
-//       updatedCartItems.push({
-//         productId: new ObjectId(product._id),
-//         quantity: newQuantity,
-//       });
-//     }
-
-//     const updatedCart = {
-//       // instead of {...product, quantity}, we are only storing the productId because if the product details change in the shop, the cart won't reflect that
-//       // so we will only refer to the id of product and manually fetch other details from products collection when needed
-//       items: updatedCartItems,
-//     };
-//     const db = getDb();
-//     return db
-//       .collection("users")
-//       .updateOne(
-//         { _id: new ObjectId(this._id) },
-//         { $set: { cart: updatedCart } }
-//       );
 //   }
 
 //   getCart() {

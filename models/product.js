@@ -3,6 +3,9 @@ const user = require("./user");
 // Schema constructor allows us to create a new schema
 const Schema = mongoose.Schema;
 
+//-> Mongoose requires a schema even though it is NoSQL
+//? But that's only as a guideline and structure for our documents
+//# We need not follow the schema strictly like in SQL databases
 const productSchema = new Schema({
   title: { type: String, required: true },
   price: { type: Number, required: true },
